@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 560" width="100%" height="100%">
+  <!-- Pure White Strict Background -->
+  <rect width="960" height="560" fill="#ffffff" />
+  
+  <!-- Subtle Grid for Modern Engineering Blueprint -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f1f5f9" stroke-width="1" />
+    </pattern>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.04" />
+    </filter>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#2563eb" />
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#10b981" />
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#7c3aed" />
+    </marker>
+  </defs>
+  <rect width="960" height="560" fill="url(#grid)" />
+
+  <!-- Outer Border -->
+  <rect x="20" y="20" width="920" height="520" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" />
+
+  <!-- Header Banner -->
+  <rect x="40" y="40" width="880" height="60" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+  <circle cx="65" cy="70" r="14" fill="#2563eb" />
+  <text x="65" y="75" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">vLLM</text>
+  <text x="90" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#0f172a">vLLM High-Throughput Inference Server Architecture</text>
+  <text x="90" y="85" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#64748b">PagedAttention Virtual Memory Management &amp; Ray Distributed Worker Execution</text>
+  <rect x="760" y="55" width="140" height="30" rx="6" fill="#ecfdf5" stroke="#10b981" stroke-width="1" />
+  <text x="830" y="74" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#059669" text-anchor="middle">STRICT PURE WHITE</text>
+
+  <!-- Left Layer: Client Ingress & REST API Gateway -->
+  <g transform="translate(45, 125)">
+    <rect width="210" height="345" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#cardShadow)" />
+    <rect x="0" y="0" width="210" height="36" rx="10" fill="#f1f5f9" />
+    <text x="105" y="23" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#334155" text-anchor="middle">Ingress &amp; Client Workloads</text>
+
+    <rect x="15" y="50" width="180" height="50" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+    <text x="25" y="70" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#0f172a">Concurrent LLM Queries</text>
+    <text x="25" y="86" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">HTTP/2 Streaming &amp; Batches</text>
+
+    <rect x="15" y="115" width="180" height="60" rx="6" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1" />
+    <text x="25" y="135" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#1e40af">OpenAI-Compatible Gateway</text>
+    <text x="25" y="151" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#2563eb">POST /v1/chat/completions</text>
+    <text x="25" y="165" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#2563eb">POST /v1/completions</text>
+
+    <rect x="15" y="190" width="180" height="65" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+    <text x="25" y="210" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#0f172a">Continuous Batching</text>
+    <text x="25" y="226" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">&#x2022; Dynamic Iteration-level scheduling</text>
+    <text x="25" y="242" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#64748b">&#x2022; Zero-padding token alignment</text>
+
+    <rect x="15" y="270" width="180" height="60" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1" />
+    <text x="25" y="290" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#15803d">Cluster Health Probes</text>
+    <text x="25" y="306" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#166534">GET /health (HTTP 200)</text>
+    <text x="25" y="320" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#166534">Port 8265 (Ray Dashboard)</text>
+  </g>
+
+  <!-- Middle Layer: PagedAttention Engine & KV Cache Memory Virtualization -->
+  <g transform="translate(285, 125)">
+    <rect width="320" height="345" rx="10" fill="#ffffff" stroke="#3b82f6" stroke-width="2" filter="url(#cardShadow)" />
+    <rect x="0" y="0" width="320" height="36" rx="10" fill="#eff6ff" />
+    <text x="160" y="23" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#1e40af" text-anchor="middle">vLLM Head Node: PagedAttention Core</text>
+
+    <!-- PagedAttention Visual Blueprint -->
+    <rect x="15" y="48" width="290" height="110" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+    <text x="25" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#0f172a">PagedAttention KV-Cache Virtualization:</text>
+    <text x="25" y="85" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#475569">Logical Blocks mapped to Non-Contiguous Physical Blocks</text>
+    
+    <!-- Virtual Blocks -->
+    <g transform="translate(25, 95)">
+      <rect x="0" y="0" width="55" height="24" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1" />
+      <text x="27" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="600" fill="#1d4ed8" text-anchor="middle">Block #0</text>
+      <rect x="65" y="0" width="55" height="24" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1" />
+      <text x="92" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="600" fill="#1d4ed8" text-anchor="middle">Block #1</text>
+      <rect x="130" y="0" width="55" height="24" rx="4" fill="#dbeafe" stroke="#3b82f6" stroke-width="1" />
+      <text x="157" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="600" fill="#1d4ed8" text-anchor="middle">Block #2</text>
+      <rect x="195" y="0" width="55" height="24" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1" />
+      <text x="222" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="600" fill="#b45309" text-anchor="middle">Block #3</text>
+    </g>
+    <text x="25" y="145" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#059669">Near-Zero VRAM Waste (&lt;4% internal fragmentation)</text>
+
+    <!-- Ray Head Node Details -->
+    <rect x="15" y="170" width="290" height="95" rx="6" fill="#fdf4ff" stroke="#f0abfc" stroke-width="1" />
+    <text x="25" y="190" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#701a75">Ray Cluster Head Orchestrator</text>
+    <text x="25" y="208" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#4a044e">&#x2022; GCS Metadata Server: Port 6379</text>
+    <text x="25" y="224" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#4a044e">&#x2022; Tensor Parallelism: TENSOR_PARALLEL_SIZE=1..8</text>
+    <text x="25" y="240" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#4a044e">&#x2022; IPC Shared Memory: shm_size 16GB</text>
+
+    <!-- Model Spec Cache -->
+    <rect x="15" y="280" width="290" height="50" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+    <text x="25" y="300" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" fill="#334155">Volume: vllm_huggingface_cache</text>
+    <text x="25" y="316" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#64748b">Persistent Weights: Meta-Llama-3-8B-Instruct</text>
+  </g>
+
+  <!-- Right Layer: Distributed Ray Worker & GPU Hardware Execution -->
+  <g transform="translate(635, 125)">
+    <rect width="280" height="345" rx="10" fill="#ffffff" stroke="#7c3aed" stroke-width="2" filter="url(#cardShadow)" />
+    <rect x="0" y="0" width="280" height="36" rx="10" fill="#faf5ff" />
+    <text x="140" y="23" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#6b21a8" text-anchor="middle">Ray Worker Node &amp; Hardware</text>
+
+    <!-- Worker Process -->
+    <rect x="15" y="50" width="250" height="85" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1" />
+    <text x="25" y="70" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" fill="#0f172a">vllm-ray-worker Replica</text>
+    <text x="25" y="88" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#475569">&#x2022; Address: vllm-head:6379</text>
+    <text x="25" y="104" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#475569">&#x2022; Dynamic Actor Pool Execution</text>
+    <text x="25" y="120" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#475569">&#x2022; High-bandwidth NCCL Point-to-Point</text>
+
+    <!-- GPU Passthrough Hardware Box -->
+    <rect x="15" y="150" width="250" height="175" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5" />
+    <text x="140" y="175" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#15803d" text-anchor="middle">NVIDIA GPU Acceleration</text>
+    
+    <rect x="25" y="190" width="230" height="35" rx="4" fill="#ffffff" stroke="#bbf7d0" stroke-width="1" />
+    <text x="35" y="206" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" fill="#166534">CUDA Core &amp; Tensor Core Engine</text>
+    <text x="35" y="218" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#15803d">FlashAttention-2 / Triton Kernel Fast-path</text>
+
+    <rect x="25" y="235" width="230" height="35" rx="4" fill="#ffffff" stroke="#bbf7d0" stroke-width="1" />
+    <text x="35" y="251" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" fill="#166534">High-Bandwidth HBM3 / GDDR6</text>
+    <text x="35" y="263" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#15803d">GPU Memory Utilization: 90% Reserved</text>
+
+    <rect x="25" y="280" width="230" height="35" rx="4" fill="#ffffff" stroke="#bbf7d0" stroke-width="1" />
+    <text x="35" y="296" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="600" fill="#166534">NCCL Interconnect</text>
+    <text x="35" y="308" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#15803d">NVLink / PCIe Peer-to-Peer Tensor Sync</text>
+  </g>
+
+  <!-- Flow Arrows -->
+  <path d="M 255 220 L 285 220" fill="none" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow-blue)" />
+  <path d="M 605 220 L 635 220" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow-purple)" />
+
+  <!-- Bottom Specification Footer -->
+  <rect x="40" y="490" width="880" height="35" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+  <text x="55" y="512" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#475569">Performance Benchmarks:</text>
+  <text x="210" y="512" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#64748b">24x Higher Throughput vs Standard HuggingFace TGI</text>
+  <text x="550" y="512" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#64748b">&#x2022; Sub-15ms Time-to-First-Token (TTFT)</text>
+</svg>

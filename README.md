@@ -1,128 +1,105 @@
-# :rocket: Vllm High Throughput Inference Server
+# vLLM High-Throughput Distributed Inference Server
 
-<div align="center">
+[![CI Pipeline](https://github.com/tayyabmasood911/vllm-high-throughput-inference-server/actions/workflows/ci.yml/badge.svg)](https://github.com/tayyabmasood911/vllm-high-throughput-inference-server/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![PagedAttention](https://img.shields.io/badge/Engine-PagedAttention-blueviolet.svg)](https://vllm.ai)
+[![Ray Distributed](https://img.shields.io/badge/Orchestrator-Ray_Cluster-028CF0.svg)](https://docs.ray.io)
+[![OpenAI Compatible](https://img.shields.io/badge/API-OpenAI_Compatible-412991.svg)](https://platform.openai.com/docs/api-reference)
 
-[![Status](https://img.shields.io/badge/status-production--ready-brightgreen?style=for-the-badge&logo=git)]()
-[![Domain](https://img.shields.io/badge/domain-AI--Engineering--and--LLMOps-blueviolet?style=for-the-badge)]()
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge&logo=github)](https://github.com/T9113/vllm-high-throughput-inference-server/pulls)
-[![Security Hardened](https://img.shields.io/badge/security-hardened-red?style=for-the-badge&logo=shield)]()
-
-</div>
+An enterprise-ready, distributed LLM inference engine serving state-of-the-art open-weights models (e.g., Llama 3, Mistral) at maximum hardware saturation. Powered by PagedAttention virtual memory management, Ray worker distribution, continuous batching, and an OpenAI-compliant REST gateway.
 
 ---
 
-## :memo: Executive Summary
+## Architecture Overview
 
-**Vllm High Throughput Inference Server** is an enterprise-grade production engineering implementation designed for mission-critical deployments. Built to meet stringent requirements for **99.99% availability**, zero-trust security boundaries, automated resilience, and seamless CI/CD delivery.
+![vLLM Inference Architecture](docs/architecture.svg)
 
-Key operational outcomes:
-- **Resilience:** Multi-zone high availability with automated fault detection and recovery.
-- **Scalability:** Elastic horizontal scaling responsive to real-time workload demand.
-- **Security:** Strict adherence to least-privilege RBAC, encrypted communications, and zero committed secrets.
-- **Maintainability:** Modular, declarative configuration aligned with cloud-native industry standards.
+The system leverages state-of-the-art distributed LLM infrastructure principles:
 
----
-
-## :building_construction: System Architecture
-
-```text
-+-------------------------------------------------------------------------------+
-|                       Vllm High Throughput Inference Server Architecture Blueprint                    |
-|                                                                               |
-|   [Client Ingress] ===> [API Gateway / Traffic Router (TLS 1.3 / mTLS)]       |
-|                                     |                                         |
-|                                     v                                         |
-|                         [Core Workload Cluster]                               |
-|                         (Multi-Replica / Multi-AZ)                            |
-|                                     |                                         |
-|                 +-------------------+-------------------+                     |
-|                 |                                       |                     |
-|                 v                                       v                     |
-|     [Persistence & Storage Layer]           [Observability & Telemetry Engine]|
-|      (Encrypted at Rest / KMS)              (Prometheus / OTLP / OpenSearch)  |
-+-------------------------------------------------------------------------------+
-```
+1. **PagedAttention Virtual Memory**: Eliminates KV-cache memory waste and internal fragmentation by paging attention keys and values into non-contiguous virtual memory blocks, achieving near-optimal GPU memory allocation (>96% effective utilization).
+2. **Continuous Iteration-Level Batching**: Dynamically schedules incoming requests at token-generation iteration boundaries rather than batch boundaries, slashing Time-to-First-Token (TTFT) and drastically reducing queuing delay.
+3. **Ray Multi-GPU Distribution**: The cluster is divided into a `vllm-head` API coordinator and scalable `vllm-worker` nodes communicating over high-bandwidth NCCL tensor-parallel synchronization channels.
 
 ---
 
-## :sparkles: Key Enterprise Capabilities
+## Key Features
 
-- :zap: **High Availability & Fault Tolerance:** Eliminates single points of failure via multi-node redundancy and health check probes.
-- :shield: **Zero-Trust Security Posture:** Enforces non-root runtime environments, ephemeral credentials, and automated vulnerability scanning.
-- :chart_with_upwards_trend: **Elastic Autoscaling:** Dynamic resource provisioning based on custom throughput, memory pressure, and queue depth.
-- :mag: **Full-Stack Observability:** Standardized structured telemetry, metrics instrumentation, and distributed request tracing.
-- :package: **GitOps & CI/CD Automation:** Infrastructure and configuration managed declaratively with automated testing and continuous deployment.
-
----
-
-## :file_folder: Repository Directory Structure
-
-```text
-.
-|-- config/              # Declarative configuration and environment definitions
-|-- src/                 # Production source code and manifests
-|-- scripts/             # Operational automation, setup, and maintenance scripts
-|-- tests/               # Comprehensive validation and unit test suites
-|-- LICENSE              # MIT Open Source License
-`-- README.md            # Enterprise architectural documentation
-```
+- **Extreme Serving Throughput**: Delivers up to 24x higher throughput compared to standard Hugging Face Transformers baseline implementations.
+- **Drop-in OpenAI API Server**: Fully implements standard endpoints:
+  - `POST /v1/chat/completions`
+  - `POST /v1/completions`
+  - `POST /v1/embeddings`
+  - `GET /v1/models`
+- **Tensor & Pipeline Parallelism**: Configurable multi-GPU partitioning (`TENSOR_PARALLEL_SIZE`, `PIPELINE_PARALLEL_SIZE`) across single or multi-node topologies.
+- **Built-in Throughput Benchmarking**: Automated Python evaluation script measuring requests per second, token throughput, and P50/P95/P99 latency.
+- **Production Health Monitoring**: Native readiness and liveness container probes on `/health` and Ray cluster dashboard on port `8265`.
 
 ---
 
-## :zap: Quick Start & Deployment
+## Quick Start
 
 ### Prerequisites
-- Git `>= 2.40`
-- Docker Engine `>= 24.0` / Cloud CLI (AWS / GCP / Azure / Kubernetes)
+- Docker Engine 24.0+ & Docker Compose v2.20+
+- NVIDIA GPU Driver with CUDA 12.1+ support
+- NVIDIA Container Toolkit (`nvidia-container-toolkit`)
 
-### Deployment Steps
+### 1. Environment Configuration
 ```bash
-# 1. Clone the repository
-git clone https://github.com/T9113/vllm-high-throughput-inference-server.git
-cd vllm-high-throughput-inference-server
+cp config/production.env.example .env
+```
+Set your `HF_TOKEN` in `.env` if downloading gated models like `meta-llama/Meta-Llama-3-8B-Instruct`.
 
-# 2. Inspect and configure environment parameters
-cp config/example.env config/.env
+### 2. Launch the High-Throughput Cluster
+```bash
+docker compose up -d
+```
 
-# 3. Validate configurations and syntax
-# Run linters, dry-run validations, or unit test suites
+### 3. Verify Server Readiness
+```bash
+bash scripts/healthcheck.sh
+```
 
-# 4. Deploy workloads / infrastructure
-# Execute deployment manifests or container runtime
+### 4. Execute Inference Query
+```bash
+curl -X POST http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "meta-llama/Meta-Llama-3-8B-Instruct",
+    "messages": [
+      {"role": "system", "content": "You are a distributed systems engineer."},
+      {"role": "user", "content": "Explain PagedAttention in one clear sentence."}
+    ],
+    "temperature": 0.2,
+    "max_tokens": 100
+  }'
 ```
 
 ---
 
-## :gear: Configuration Reference
+## Performance Benchmarking
 
-| Parameter | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `ENVIRONMENT` | string | `production` | Deployment environment target (`staging`, `production`) |
-| `LOG_LEVEL` | string | `info` | Structured logging verbosity (`debug`, `info`, `warn`, `error`) |
-| `METRICS_ENABLED` | boolean | `true` | Enables real-time Prometheus / OpenTelemetry telemetry export |
-| `TLS_MIN_VERSION` | string | `TLSv1.3` | Minimum allowable TLS protocol version for network traffic |
+Run the automated throughput and latency benchmarking harness:
+```bash
+python3 benchmark_throughput.py --url http://localhost:8000 --requests 50
+```
 
 ---
 
-## :lock: Security, Compliance & Governance
+## Configuration Reference
 
-1. **Least-Privilege Execution:** Services run under restricted service accounts with zero root permissions.
-2. **Encrypted Data In-Flight & At-Rest:** AES-256 / KMS envelope encryption for persistent state and TLS 1.3 for network transport.
-3. **Automated Supply Chain Security:** All dependencies and container images verified against CVE databases using Trivy and Semgrep.
-4. **Zero-Secret Guarantee:** No hardcoded tokens, passwords, or private keys exist in this codebase.
+Key variables defined in `.env`:
 
----
-
-## :bust_in_silhouette: Author & Maintainer
-
-**Tayyab Masood**  
-Cloud Solutions Architect & Senior DevOps Engineer  
-- :globe_with_meridians: **GitHub:** [@T9113](https://github.com/T9113)  
-- :scroll: **Certification:** AWS Certified Solutions Architect - Associate  
+| Parameter | Default | Description |
+| :--- | :--- | :--- |
+| `VLLM_PORT` | `8000` | Ingress REST API server port |
+| `MODEL` | `meta-llama/Meta-Llama-3-8B-Instruct` | Hugging Face model identifier |
+| `TENSOR_PARALLEL_SIZE`| `1` | Number of GPUs used for tensor parallel sharding |
+| `GPU_MEMORY_UTILIZATION` | `0.90` | Fraction of GPU memory allocated to model + KV-cache |
+| `MAX_MODEL_LEN` | `8192` | Context window size |
+| `MAX_NUM_SEQS` | `256` | Maximum concurrent sequences in continuous batching |
 
 ---
 
-## :page_facing_up: License
+## Security & Responsible Disclosure
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+Please review our [SECURITY.md](SECURITY.md) for vulnerability disclosure procedures. All security inquiries should be directed to [tayyabmasood911@gmail.com](mailto:tayyabmasood911@gmail.com).
